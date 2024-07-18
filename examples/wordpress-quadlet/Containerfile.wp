@@ -1,5 +1,7 @@
 FROM summit.registry/lb1506:bootc
 
+RUN dnf -y install lynx
+
 ADD etc etc
 ADD usr usr
 
