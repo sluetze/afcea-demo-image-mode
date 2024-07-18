@@ -1,0 +1,5 @@
+FROM summit.registry/lb1506:bootc
+
+ADD etc etc
+ADD usr usr
+
