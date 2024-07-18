@@ -184,7 +184,7 @@ system-setup:
 	echo "export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI}" >> ~/.bashrc
 	mkdir -p /home/lab-user/.ssh && chmod 0700 /home/lab-user/.ssh
 	touch /home/lab-user/.ssh/known_hosts && chmod 600 /home/lab-user/.ssh/known_hosts
-	cp examples/01.Containerfile /home/lab-user/Containerfile
+	cp examples/01.Containerfile ..
 
 build:
 	podman build --file "${CONTAINERFILE}" --tag "${CONTAINER}" \
