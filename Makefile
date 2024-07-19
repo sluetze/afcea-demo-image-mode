@@ -184,7 +184,7 @@ system-setup:
 	echo "export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI}" >> ~/.bashrc
 	mkdir -p /home/lab-user/.ssh && chmod 0700 /home/lab-user/.ssh
 	touch /home/lab-user/.ssh/known_hosts && chmod 600 /home/lab-user/.ssh/known_hosts
-	cp examples/01.Containerfile ..
+	cp examples/01.Containerfile Containerfile
 
 build:
 	podman build --file "${CONTAINERFILE}" --tag "${CONTAINER}" \
@@ -209,4 +209,4 @@ status:
 	@virsh --connect "${}" list
 	@sysctl net.ipv4.ip_unprivileged_port_start
 	@podman stats --no-stream --no-reset summit-registry
-	[ -f /home/lab-user/Containerfile ] && echo 'Starting Containerfile available' 
+	[ -f ./Containerfile ] && echo 'Starting Containerfile available' 
