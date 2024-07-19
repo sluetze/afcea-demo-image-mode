@@ -7,7 +7,7 @@ Image=docker.io/library/wordpress:fpm
 ContainerName=wordpress
 AutoUpdate=registry
 EnvironmentFile=/etc/containers.environment
-Volume=wordpress.volume:/usr/share/www/html
+Volume=wordpress.volume:/var/www/html
 Network=wordpress.network
 
 [Service]
