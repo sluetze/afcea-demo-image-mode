@@ -206,4 +206,4 @@ status:
 	@virsh --connect "${}" list
 	@sysctl net.ipv4.ip_unprivileged_port_start
 	@podman stats --no-stream --no-reset summit-registry
-	[ -f ./Containerfile ] && echo 'Starting Containerfile available' 
+	[ -f ./Containerfile &> /dev/null ] && echo 'Starting Containerfile available' 
