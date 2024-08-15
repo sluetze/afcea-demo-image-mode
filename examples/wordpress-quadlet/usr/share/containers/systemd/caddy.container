@@ -3,7 +3,7 @@ Description=Caddy Quadlet
 After=network-online.target
 
 [Container]
-Image=docker.io/library/caddy:latest
+Image=quay.io/mmicene/caddy:latest
 ContainerName=caddy
 AutoUpdate=registry
 EnvironmentFile=/etc/containers.environment

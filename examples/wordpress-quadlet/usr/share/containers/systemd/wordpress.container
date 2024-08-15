@@ -3,7 +3,7 @@ Description=Wordpress Quadlet
 After=network-online.target
 
 [Container]
-Image=docker.io/library/wordpress:fpm
+Image=quay.io/mmicene/wordpress:fpm
 ContainerName=wordpress
 AutoUpdate=registry
 EnvironmentFile=/etc/containers.environment
