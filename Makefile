@@ -14,7 +14,8 @@ LIBVIRT_ISO_VM_NAME ?= iso
 LIBVIRT_REGULAR_VM_NAME ?= regular
 LIBVIRT_QCOW_VM_NAME ?= qcow
 
-ISO_URL ?= https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso
+#ISO_URL ?= https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso
+ISO_URL ?= https://access.cdn.redhat.com/content/origin/files/sha256/80/802b70dc854114ec46aec37ea358a46e57fa41a643b9edfce34fb532d66e881e/rhel-9.5-x86_64-boot.iso?_auth_=1744805997_24c1016045a71400fd692349ee7d6f5d
 ISO_NAME ?= rhel-boot
 
 CC_QCOW_URL ?= https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2
@@ -24,9 +25,12 @@ CONTAINERFILE ?= Containerfile
 
 REGISTRY_POD ?= registry-pod.yaml
 
+HOME_PATH ?=/home/sluetzen/
+
 .PHONY: certs templates
 
-setup: system-setup vm-setup registry-certs ssh templates registry iso-download setup-pull
+#setup: system-setup vm-setup registry-certs ssh templates registry iso-download setup-pull
+setup: system-setup vm-setup templates iso-download setup-pull
 clean: vm-setup-clean iso-clean qcow-clean templates-clean registry-certs-clean
 
 setup-registry: registry-certs registry
@@ -181,8 +185,8 @@ system-setup:
 	sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
 	git config pull.rebase true
 	echo "export LIBVIRT_DEFAULT_URI=${LIBVIRT_DEFAULT_URI}" >> ~/.bashrc
-	mkdir -p /home/lab-user/.ssh && chmod 0700 /home/lab-user/.ssh
-	touch /home/lab-user/.ssh/known_hosts && chmod 600 /home/lab-user/.ssh/known_hosts
+	mkdir -p "${HOME_PATH}/.ssh" && chmod 0700 "${HOME_PATH}/.ssh"
+	touch "${HOME_PATH}/.ssh/known_hosts" && chmod 600 "${HOME_PATH}/.ssh/known_hosts"
 	cp examples/01.Containerfile Containerfile
 
 build:
