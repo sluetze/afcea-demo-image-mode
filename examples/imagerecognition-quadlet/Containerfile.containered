@@ -1,0 +1,3 @@
+FROM registry.redhat.io/rhel9/rhel-bootc:9.4
+
+ADD usr/ /usr

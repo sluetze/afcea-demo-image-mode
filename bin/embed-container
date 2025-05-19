@@ -43,7 +43,7 @@ TEMPDIR=$(mktemp --directory)
 
 echo Unpack container image
 mkdir -p "${TEMPDIR}/container"
-skopeo copy "docker://$1" "oci:${TEMPDIR}/container/"
+skopeo copy "docker://$1" "oci:${TEMPDIR}/container/" --remove-signatures
 standard_ks > "${TEMPDIR}/local.ks"
 standard_ks > config/local.ks
 echo Pack iso to "$2"

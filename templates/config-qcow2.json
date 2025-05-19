@@ -10,6 +10,14 @@
             "wheel"
           ]
         }
+      ],
+      "disk": [
+        {
+          "mountpoint" : "/var/home",
+          "minsize" : "25 GiB",
+          "label": "home",
+          "fs_type": "ext4"
+        }
       ]
     }
   }

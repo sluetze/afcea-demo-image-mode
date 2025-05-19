@@ -3,7 +3,7 @@ Description=Imagerecognition Quadlet
 After=network-online.target
 
 [Container]
-Image=quay.io/gmagnotta/webapp-image-detection:latest
+Image=quay.io/gmagnotta/webapp-image-detection:military
 ContainerName=imagerecognition
 AutoUpdate=registry
 Network=imagerecognition.network

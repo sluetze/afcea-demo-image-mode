@@ -8,14 +8,14 @@ BOOTC_IMAGE_BUILDER_CS ?= quay.io/centos-bootc/bootc-image-builder:latest
 LIBVIRT_DEFAULT_URI ?= qemu:///system
 LIBVIRT_NETWORK ?= summit-network
 LIBVIRT_STORAGE ?= summit-storage
-LIBVIRT_STORAGE_DIR ?= /var/lib/libvirt/images/summit
+LIBVIRT_STORAGE_DIR ?= /var/lib/libvirt/images/summit-storage
 
 LIBVIRT_ISO_VM_NAME ?= iso
 LIBVIRT_REGULAR_VM_NAME ?= regular
 LIBVIRT_QCOW_VM_NAME ?= qcow
 
 #ISO_URL ?= https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-boot.iso
-ISO_URL ?= https://access.cdn.redhat.com/content/origin/files/sha256/80/802b70dc854114ec46aec37ea358a46e57fa41a643b9edfce34fb532d66e881e/rhel-9.5-x86_64-boot.iso?_auth_=1744805997_24c1016045a71400fd692349ee7d6f5d
+ISO_URL ?= https://access.cdn.redhat.com/content/origin/files/sha256/17/17b013f605e6b85affd37431b533b6904541f8b889179ae3f99e1e480dd4ae38/rhel-9.4-x86_64-boot.iso?user=76035c216b93c93332c058cf83b788d5&_auth_=1746798849_ea00c0e77fdefcecf0f004ab48b4faed
 ISO_NAME ?= rhel-boot
 
 CC_QCOW_URL ?= https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2
@@ -25,12 +25,12 @@ CONTAINERFILE ?= Containerfile
 
 REGISTRY_POD ?= registry-pod.yaml
 
-HOME_PATH ?=/home/sluetzen/
+HOME_PATH ?=/home/steffen/
 
 .PHONY: certs templates
 
 #setup: system-setup vm-setup registry-certs ssh templates registry iso-download setup-pull
-setup: system-setup vm-setup templates iso-download setup-pull
+setup: system-setup setup-virsh setup-lorax vm-setup templates iso-download setup-pull 
 clean: vm-setup-clean iso-clean qcow-clean templates-clean registry-certs-clean
 
 setup-registry: registry-certs registry
@@ -59,7 +59,7 @@ vm-clean-storage:
 vm-iso:
 	ssh-keygen -R iso-vm
 	ssh-keygen -R 192.168.150.100
-	virt-install --connect "${LIBVIRT_DEFAULT_URI}" \
+	virt-install --connsudo qemu-img resize "${LIBVIRT_STORAGE_DIR}/disk.qcow2" 20Gect "${LIBVIRT_DEFAULT_URI}" \
 		--name "${LIBVIRT_ISO_VM_NAME}" \
 		--disk "pool=${LIBVIRT_STORAGE},size=50" \
 		--network "network=${LIBVIRT_NETWORK},mac=de:ad:be:ef:01:01" \
@@ -102,7 +102,7 @@ vm-qcow:
 	sudo cp qcow2/disk.qcow2 "${LIBVIRT_STORAGE_DIR}/${LIBVIRT_QCOW_VM_NAME}.qcow2"
 	virt-install --connect "${LIBVIRT_DEFAULT_URI}" \
 		--name "${LIBVIRT_QCOW_VM_NAME}" \
-		--disk "${LIBVIRT_STORAGE_DIR}/${LIBVIRT_QCOW_VM_NAME}.qcow2" \
+		--disk "${LIBVIRT_STORAGE_DIR}/disk.qcow2" \
 		--import \
 		--network "network=${LIBVIRT_NETWORK},mac=de:ad:be:ef:01:03" \
 		--memory 4096 \
@@ -137,6 +137,8 @@ templates-clean:
 
 qcow:
 	sudo podman run --rm -it --privileged \
+		--pull missing \
+		--authfile "${XDG_RUNTIME_DIR}/containers/auth.json" \
 		-v .:/output \
 		-v $(shell pwd)/config/config-qcow2.json:/config.json \
 		"${BOOTC_IMAGE_BUILDER}" \
@@ -153,7 +155,20 @@ iso:
 	sudo rm -f "${LIBVIRT_STORAGE_DIR}/${ISO_NAME}-custom.iso"
 	sudo bash bin/embed-container "${CONTAINER}" "${LIBVIRT_STORAGE_DIR}/${ISO_NAME}.iso" "${LIBVIRT_STORAGE_DIR}/${ISO_NAME}-custom.iso"
 
+iso-imagebuilder:
+	sudo podman run --rm -it --privileged \
+	--pull missing \
+	--authfile "${XDG_RUNTIME_DIR}/containers/auth.json" \
+	-v .:/output \
+	-v $(shell pwd)/config/config-qcow2.json:/config.json \
+	"${BOOTC_IMAGE_BUILDER}" \var/lib/libvirt/images/summit-storage/
+	--type anaconda-iso \
+	--config /config.json \
+	--tls-verify=false \
+	"${CONTAINER}"
+
 iso-download:
+	mkdir -p ${LIBVIRT_STORAGE_DIR}/
 	sudo curl -L -o "${LIBVIRT_STORAGE_DIR}/${ISO_NAME}.iso" "${ISO_URL}"
 
 iso-clean:
@@ -180,6 +195,15 @@ setup-pull:
 	podman pull "${BOOTC_IMAGE}" "${BOOTC_IMAGE_BUILDER}"  \
 		quay.io/kwozyman/toolbox:httpd quay.io/kwozyman/toolbox:registry
 	sudo podman pull --authfile "${XDG_RUNTIME_DIR}/containers/auth.json" "${BOOTC_IMAGE_BUILDER}" 
+
+setup-virsh:
+	sudo dnf install @virtualization -y
+	sudo systemctl start libvirtd
+	sudo systemctl enable libvirtd
+	sudo usermod -a -G libvirt $(whoami)
+
+setup-lorax:
+	sudo dnf install lorax -y
 
 system-setup:
 	sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
