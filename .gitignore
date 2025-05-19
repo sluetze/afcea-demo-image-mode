@@ -4,3 +4,4 @@ certs/ca.key
 config/config-qcow2.json
 config/kickstart.ks
 config/local.ks
+*.qcow2
