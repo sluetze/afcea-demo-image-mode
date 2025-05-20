@@ -128,8 +128,8 @@ ssh:
 	@ssh-keygen -t ed25519 -f ~/.ssh/id_rsa -N ""
 
 templates:
-	@cat templates/config-qcow2.json | jq ".blueprint.customizations.user[0].key=\"$(shell cat ~/.ssh/id_rsa.pub)\"" > config/config-qcow2.json
-	@cat templates/kickstart.ks | sed "s^SSHKEY^$(shell cat ~/.ssh/id_rsa.pub)^g" > config/kickstart.ks
+	@cat templates/config-qcow2.json | jq ".blueprint.customizations.user[0].key=\"$(shell cat ~/.ssh/id_ed25519.pub )\"" > config/config-qcow2.json
+	@cat templates/kickstart.ks | sed "s^SSHKEY^$(shell cat ~/.ssh/id_ed25519.pub )^g" > config/kickstart.ks
 
 templates-clean:
 	rm -f config/kickstart.ks

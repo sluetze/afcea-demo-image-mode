@@ -5,4 +5,7 @@ config/config-qcow2.json
 config/kickstart.ks
 config/local.ks
 *.qcow2
+*-qcow2.json
 */manifest-qcow2.json
+manifest-qcow2.json
+examples/imagerecognition-quadlet/manifest-qcow2.json

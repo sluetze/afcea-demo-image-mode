@@ -46,14 +46,14 @@
           "type": "org.osbuild.truncate",
           "options": {
             "filename": "disk.raw",
-            "size": "10737418240"
+            "size": "27056406528"
           }
         },
         {
           "type": "org.osbuild.sfdisk",
           "options": {
             "label": "gpt",
-            "uuid": "D209C89E-EA5E-4FBD-B161-B461CCE297E0",
+            "uuid": "08a26572-d1e8-48ec-952f-c862047dc9b0",
             "partitions": [
               {
                 "bootable": true,
@@ -63,22 +63,16 @@
                 "uuid": "FAC7F1FB-3E8D-4137-A512-961DE09A5549"
               },
               {
-                "size": 1026048,
+                "size": 409600,
                 "start": 4096,
                 "type": "C12A7328-F81F-11D2-BA4B-00A0C93EC93B",
                 "uuid": "68B2905B-DF3E-4FB3-80FA-49D1E773AA33"
               },
               {
-                "size": 2097152,
-                "start": 1030144,
+                "size": 52430815,
+                "start": 413696,
                 "type": "0FC63DAF-8483-4772-8E79-3D69D8477DE4",
-                "uuid": "CB07C243-BC44-4717-853E-28852021225B"
-              },
-              {
-                "size": 17844191,
-                "start": 3127296,
-                "type": "0FC63DAF-8483-4772-8E79-3D69D8477DE4",
-                "uuid": "6264D520-3FB9-423F-8AB8-7A0A8E3D3562"
+                "uuid": "4015c00e-8450-4ed4-9438-3ee39278ea44"
               }
             ]
           },
@@ -103,7 +97,7 @@
               "options": {
                 "filename": "disk.raw",
                 "start": 4096,
-                "size": 1026048,
+                "size": 409600,
                 "lock": true
               }
             }
@@ -112,34 +106,16 @@
         {
           "type": "org.osbuild.mkfs.xfs",
           "options": {
-            "uuid": "0ec543bb-fbbf-4648-8042-1fbf2e9e93c2",
-            "label": "boot"
+            "uuid": "e2ca67f3-a585-4c79-9535-112533e038fb",
+            "label": "sysroot"
           },
           "devices": {
             "device": {
               "type": "org.osbuild.loopback",
               "options": {
                 "filename": "disk.raw",
-                "start": 1030144,
-                "size": 2097152,
-                "lock": true
-              }
-            }
-          }
-        },
-        {
-          "type": "org.osbuild.mkfs.xfs",
-          "options": {
-            "uuid": "4cf18c07-c631-4c1b-9f11-b0a27c841db3",
-            "label": "root"
-          },
-          "devices": {
-            "device": {
-              "type": "org.osbuild.loopback",
-              "options": {
-                "filename": "disk.raw",
-                "start": 3127296,
-                "size": 17844191,
+                "start": 413696,
+                "size": 52430815,
                 "lock": true
               }
             }
@@ -181,13 +157,6 @@
               "type": "org.osbuild.xfs",
               "source": "disk",
               "target": "/",
-              "partition": 4
-            },
-            {
-              "name": "boot",
-              "type": "org.osbuild.xfs",
-              "source": "disk",
-              "target": "/boot",
               "partition": 3
             },
             {
@@ -204,26 +173,16 @@
           "options": {
             "filesystems": [
               {
-                "uuid": "4cf18c07-c631-4c1b-9f11-b0a27c841db3",
+                "uuid": "e2ca67f3-a585-4c79-9535-112533e038fb",
                 "vfs_type": "xfs",
                 "path": "/",
-                "options": "ro",
-                "freq": 1,
-                "passno": 1
-              },
-              {
-                "uuid": "0ec543bb-fbbf-4648-8042-1fbf2e9e93c2",
-                "vfs_type": "xfs",
-                "path": "/boot",
-                "options": "ro",
-                "freq": 1,
-                "passno": 2
+                "options": "defaults"
               },
               {
                 "uuid": "7B77-95E7",
                 "vfs_type": "vfat",
                 "path": "/boot/efi",
-                "options": "umask=0077,shortname=winnt",
+                "options": "defaults,uid=0,gid=0,umask=077,shortname=winnt",
                 "passno": 2
               }
             ]
@@ -243,13 +202,6 @@
               "type": "org.osbuild.xfs",
               "source": "disk",
               "target": "/",
-              "partition": 4
-            },
-            {
-              "name": "boot",
-              "type": "org.osbuild.xfs",
-              "source": "disk",
-              "target": "/boot",
               "partition": 3
             },
             {
@@ -305,13 +257,6 @@
               "type": "org.osbuild.xfs",
               "source": "disk",
               "target": "/",
-              "partition": 4
-            },
-            {
-              "name": "boot",
-              "type": "org.osbuild.xfs",
-              "source": "disk",
-              "target": "/boot",
               "partition": 3
             },
             {
@@ -349,8 +294,8 @@
                 "groups": [
                   "wheel"
                 ],
-                "password": "$6$g2ABDt7ANIfn/tSA$mLQ1M0VdJ3PPIrGx7qnyyC9X0K5KGRcX1brUN9pvMSRCYZMEPnFjwg39T/ZTEPc/0qbn.Ypo3oYdfvCHLsAo4.",
-                "key": ""
+                "password": "$6$EqHxs79mKAv4AASJ$6Ng47SN0W7MI.rGZcOvf0LEtdjIdwYwH3J/YEgknMt7cbrppH6X5FflbwgXbGeBUGUt1unBNLCO7hzFyDQspp1",
+                "key": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK9G4KeRhtYDL8wUxJQHQyh1Oth0q6UeXwMBcdEfuYtX steffen@nobara-pc"
               }
             }
           },
@@ -369,13 +314,6 @@
               "type": "org.osbuild.xfs",
               "source": "disk",
               "target": "/",
-              "partition": 4
-            },
-            {
-              "name": "boot",
-              "type": "org.osbuild.xfs",
-              "source": "disk",
-              "target": "/boot",
               "partition": 3
             },
             {
@@ -428,13 +366,6 @@
               "type": "org.osbuild.xfs",
               "source": "disk",
               "target": "/",
-              "partition": 4
-            },
-            {
-              "name": "boot",
-              "type": "org.osbuild.xfs",
-              "source": "disk",
-              "target": "/boot",
               "partition": 3
             },
             {

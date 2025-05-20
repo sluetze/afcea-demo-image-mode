@@ -6,8 +6,8 @@ export CONTAINERFILE=Containerfile.containered
 export CONTAINER=quay.io/sluetzen/bootc-imagerecognition:latest
 
 ## Create Container image
-	podman build --file "${CONTAINERFILE}" --tag "${CONTAINER}" \
-		--build-arg SSHPUBKEY="$(shell cat ~/.ssh/id_rsa.pub)" 
+podman build --file "${CONTAINERFILE}" --tag "${CONTAINER}" \
+        --build-arg SSHPUBKEY="$(shell cat ~/.ssh/id_rsa.pub)" 
 
 ## Push Container Image to registry
 podman push "${CONTAINER}"
@@ -38,7 +38,7 @@ sudo podman run --rm -it --privileged \
 
 sudo cp qcow2/disk.qcow2 ${LIBVIRT_STORAGE_DIR}/.
 
-sudo qemu-img resize "${LIBVIRT_STORAGE_DIR}/disk.qcow2" 20G
+sudo qemu-img resize "${LIBVIRT_STORAGE_DIR}/disk.qcow2" 30G
 
 virt-install --connect "${LIBVIRT_DEFAULT_URI}" \
 --name "${LIBVIRT_QCOW_VM_NAME}" \

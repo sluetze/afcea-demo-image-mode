@@ -11,15 +11,16 @@
           ]
         }
       ],
-      "disk": [
-        {
-          "mountpoint" : "/var/home",
-          "minsize" : "25 GiB",
-          "label": "home",
-          "fs_type": "ext4"
-        }
-      ]
+      "disk": {
+        "partitions": [
+          {
+          "mountpoint": "/",
+          "minsize": "25 GiB",
+          "label": "sysroot",
+          "fs_type": "xfs"
+          }
+        ]
+      }
     }
   }
 }
-
