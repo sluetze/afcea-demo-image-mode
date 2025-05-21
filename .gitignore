@@ -9,3 +9,4 @@ config/local.ks
 */manifest-qcow2.json
 manifest-qcow2.json
 examples/imagerecognition-quadlet/manifest-qcow2.json
+*.iso

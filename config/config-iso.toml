@@ -1,0 +1,48 @@
+# [[customizations.user]]
+# name = "lab-user"
+# password = "lb1506"
+# key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK9G4KeRhtYDL8wUxJQHQyh1Oth0q6UeXwMBcdEfuYtX steffen@nobara-pc"
+# groups = ["wheel"]
+
+[[customizations.filesystem]]
+mountpoint = "/"
+minsize = "25 GiB"
+label = "sysroot"
+fs_type = "xfs"
+
+[customizations.timezone]
+timezone = "Europe/Berlin"
+ntpservers = ["server 0.de.pool.ntp.org","server 1.de.pool.ntp.org"]
+
+[customizations.locale]
+languages = ["en_US.UTF-8"]
+keyboard = "us"
+
+[customizations.installer.kickstart]
+contents = """
+# graphic based install
+graphical
+
+network --bootproto=dhcp --device=link --activate --onboot=on
+
+#otherwise kickstart says kickstart incomplete
+clearpart --all --initlabel --disklabel=gpt
+reqpart --add-boot
+part / --grow --fstype xfs
+
+firewall --disabled
+services --enabled=sshd
+
+# optionally add a user
+user --name=afcea --groups=wheel --plaintext --password=afcea
+sshkey --username afcea "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIJvvCCozfyPpfbRXa5Ky8+J3F9FUEe10Z0xKqpWMDU3 sluetzen@sluetzen-mac"
+
+# if desired, inject a SSH key for root
+rootpw lb1506
+sshkey --username root "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIJvvCCozfyPpfbRXa5Ky8+J3F9FUEe10Z0xKqpWMDU3 sluetzen@sluetzen-mac" #paste your ssh key here
+poweroff
+
+%post --erroronfail
+bootc switch --mutate-in-place --transport registry quay.io/sluetzen/bootc-imagerecognition:latest
+%end
+"""

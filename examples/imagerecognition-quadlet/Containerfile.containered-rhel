@@ -1,0 +1,10 @@
+FROM registry.redhat.io/rhel9/rhel-bootc:9.6
+
+RUN dnf -y group install GNOME base-x Fonts
+RUN dnf -y install firefox
+
+RUN systemctl set-default graphical.target
+
+ADD usr/ /usr
+
+RUN bootc container lint
